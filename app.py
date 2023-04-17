@@ -15,12 +15,12 @@ stores = [
 ]
 
 
-@app.get('/store')
-def get_store():  # put application's code here
+@app.get('/store/')
+def get_store():
     return {"stores": stores}
 
 
-@app.post('/store')
+@app.post('/store/')
 def create_store():
     request_data = request.get_json()
     new_store = {"name": request_data["name"], "items": []}
@@ -28,7 +28,7 @@ def create_store():
     return new_store, 201
 
 
-@app.post('/store/<string:name>/item')
+@app.post('/store/<string:name>/item/')
 def create_items(name):
     request_data = request.get_json()
     for store in stores:
