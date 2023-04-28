@@ -1,8 +1,8 @@
+from flask_sqlalchemy import SQLAlchemy
 def main():
     pass
 
-stores = {}
-items = {}
+db = SQLAlchemy()
 
 
 
