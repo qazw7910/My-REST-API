@@ -1,5 +1,3 @@
-from sqlalchemy import null
-
 from db import db
 
 
