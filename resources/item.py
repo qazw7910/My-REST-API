@@ -19,7 +19,9 @@ class Item(MethodView):
 
     def delete(self, item_id):
         item = ItemModel.query.get_or_404(item_id)
-        raise NotImplementedError("Deleting an item is not implemented.")
+        db.session.delete(item)
+        db.session.commit()
+        return {"mesage": "Item deleted"}
 
     @blp.arguments(ItemUpdateSchema)
     @blp.response(200, ItemSchema)
@@ -29,7 +31,7 @@ class Item(MethodView):
             item.price = item_data["price"]
             item.name = item_data["name"]
         else:
-            item = ItemModel(id = item_id, **item_data)
+            item = ItemModel(id=item_id, **item_data)
 
         db.session.add(item)
         db.session.commit()
@@ -41,7 +43,7 @@ class Item(MethodView):
 class ItemList(MethodView):
     @blp.response(200, ItemSchema(many=True))
     def get(self):
-        return items.values()
+        return ItemModel.query.all()
 
     @blp.arguments(ItemSchema)
     @blp.response(201, ItemSchema)
