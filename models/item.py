@@ -11,4 +11,6 @@ class ItemModel(db.Model):
     store_id = db.Column(
         db.Integer, db.ForeignKey("stores.id"), unique=False, nullable=False
     )
+    # back_populates is a parameter that allows you to specify the other side of
+    # a bidirectional relationship between two tables.
     store = db.relationship("StoreModel", back_populates="items")
