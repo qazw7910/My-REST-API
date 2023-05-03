@@ -6,21 +6,21 @@ from db import db
 from models import TagModel, StoreModel
 from schemas import TagSchema
 
-blp = Blueprint("Tags", "tags", description="Operation on tags")
+blp = Blueprint("Tags", "tags", description="Operations on tags")
 
 
 @blp.route("/store/<string:store_id>/tag")
 class TagsInStore(MethodView):
-    @blp.response(200,TagSchema(many=True))
+    @blp.response(200, TagSchema(many=True))
     def get(self, store_id):
         store = StoreModel.query.get_or_404(store_id)
         return store.tags.all()
 
     @blp.arguments(TagSchema)
-    @blp.response(201,TagSchema)
+    @blp.response(201, TagSchema)
     def post(self, tag_data, store_id):
-        if TagModel.query.filter(TagSchema.store_id == store_id, TagSchema.name == tag_data).first():
-            abort(400, message="a tag with the name already exists in that store'")
+        if TagModel.query.filter(TagModel.store_id == store_id, TagModel.name == tag_data["name"]).first():
+            abort(400, message="A tag with that name already exists in that store.")
 
         tag = TagModel(**tag_data, store_id=store_id)
 
@@ -29,15 +29,15 @@ class TagsInStore(MethodView):
             db.session.commit()
         except SQLAlchemyError as e:
             abort(
-                500, message=str(e)
+                500,
+                message=str(e),
             )
 
         return tag
 
-@blp.route("/tags/<string:tag_id>")
+@blp.route("/tag/<string:tag_id>")
 class Tag(MethodView):
     @blp.response(200, TagSchema)
     def get(self, tag_id):
         tag = TagModel.query.get_or_404(tag_id)
         return tag
-
