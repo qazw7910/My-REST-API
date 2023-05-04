@@ -11,3 +11,4 @@ class TagModel(db.Model):
     # back_populates is a parameter that allows you to specify the other side of
     # a bidirectional relationship between two tables.
     store = db.relationship("StoreModel", back_populates="tags")
+    items = db.relationship("ItemModel", back_populates="tags", secondary="items_tags")
