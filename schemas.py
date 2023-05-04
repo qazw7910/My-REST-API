@@ -11,7 +11,8 @@ from marshmallow import Schema, fields
 # transformed into a format that can be stored or transmitted) back into its original
 # form so that it can be used in an application.
 
-
+# ----------------------------------------------------------------
+# Same Layer
 class PlainItemSchema(Schema):
     # dump_only=True n the context of APIs, deserialization is often used to convert data received from a
     # request (e.g., JSON data in the request body) into Python objects that can be processed by the API.
@@ -42,8 +43,11 @@ class PlainTagSchema(Schema):
 class ItemSchema(PlainItemSchema):
     store_id = fields.Int(required=True, load_only=True)
     store = fields.Nested(PlainStoreSchema(), dump_only=True)
+    tags = fields.List(fields.Nested(PlainTagSchema()), dump_only=True)
 
 
+# ----------------------------------------------------------------
+# Same Layer Plain__Schema
 class ItemUpdateSchema(Schema):
     name = fields.Str()
     price = fields.Float()
@@ -56,4 +60,11 @@ class StoreSchema(PlainStoreSchema):
 
 class TagSchema(PlainTagSchema):
     store_id = fields.Int(load_only=True)
+    items = fields.List(fields.Nested(PlainItemSchema()), dump_only=True)
     store = fields.Nested(PlainStoreSchema(), dump_only=True)
+# ----------------------------------------------------------------
+# secondary Table
+class TagAndItemSchema(Schema):
+    message = fields.Str()
+    item = fields.Nested(ItemSchema())
+    tag = fields.Nested(TagSchema())
